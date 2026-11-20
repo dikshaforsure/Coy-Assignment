@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Environment variables
+.env
+.env.*
+
+# SQLite database
+backend/coy.db
+backend/coy.db-shm
+backend/coy.db-wal
+
+# Build files
+dist/
+frontend/dist/
+backend/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor/system files
+.vscode/
+.DS_Store

@@ -1,0 +1,311 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #fff8fa;
+  color: #29202a;
+}
+
+button {
+  cursor: pointer;
+  font: inherit;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.app-container {
+  min-height: 100vh;
+}
+
+.navbar {
+  height: 75px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8%;
+  box-shadow: 0 2px 12px #0000000d;
+}
+
+.logo {
+  font-size: 32px;
+  color: #e84b80;
+  font-weight: 800;
+}
+
+.logo span {
+  color: #29202a;
+}
+
+.navbar nav {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar nav button {
+  border: none;
+  background: transparent;
+  padding: 12px;
+  color: #777;
+  font-weight: 600;
+}
+
+.navbar nav .nav-active {
+  color: #e84b80;
+  border-bottom: 2px solid #e84b80;
+}
+
+.discover-container,
+.matches-container {
+  max-width: 850px;
+  margin: 45px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.section-heading {
+  margin-bottom: 25px;
+}
+
+.section-heading h2,
+.matches-container > h2 {
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.section-heading p,
+.matches-container > p {
+  color: #888;
+}
+
+.profile-card {
+  max-width: 420px;
+  margin: auto;
+  background: white;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px #00000012;
+}
+
+.profile-image-container {
+  height: 430px;
+  position: relative;
+  background: #f4e6ec;
+}
+
+.profile-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 45px 20px 20px;
+  text-align: left;
+  color: white;
+  background: linear-gradient(transparent, #000000bb);
+}
+
+.image-overlay h2 {
+  font-size: 27px;
+}
+
+.image-overlay p {
+  margin-top: 7px;
+}
+
+.profile-details {
+  padding: 20px;
+  text-align: left;
+}
+
+.profile-bio {
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 18px;
+}
+
+.profile-details h4 {
+  margin-bottom: 12px;
+}
+
+.interests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.interest-tag {
+  background: #fff0f5;
+  color: #d63d70;
+  padding: 8px 13px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.swipe-actions {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 10px 20px;
+}
+
+.swipe-actions button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: white;
+  font-size: 28px;
+  border: 2px solid;
+  transition: transform 0.2s;
+}
+
+.swipe-actions button:hover {
+  transform: scale(1.1);
+}
+
+.pass-button {
+  color: #777;
+  border-color: #ddd !important;
+}
+
+.like-button {
+  color: #e84b80;
+  border-color: #e84b80 !important;
+}
+
+.keyboard-hint {
+  padding: 10px 0 20px;
+  color: #aaa;
+  font-size: 12px;
+}
+
+.status-message {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.status-message p {
+  margin-top: 12px;
+  color: #888;
+}
+
+.status-message button,
+.match-modal button {
+  border: none;
+  background: #e84b80;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 25px;
+  margin-top: 20px;
+}
+
+.matches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.match-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  padding-bottom: 15px;
+  box-shadow: 0 5px 20px #0000000d;
+}
+
+.match-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.match-card h3 {
+  margin: 12px 5px 5px;
+}
+
+.match-card p {
+  color: #888;
+  font-size: 13px;
+}
+
+.error-message {
+  background: #ffe5e5;
+  color: #a32121;
+  padding: 12px;
+  text-align: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000000a6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.match-modal {
+  background: white;
+  border-radius: 24px;
+  padding: 35px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.match-modal h1 {
+  color: #e84b80;
+  margin-bottom: 20px;
+}
+
+.match-modal img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.match-modal h2 {
+  font-size: 19px;
+  margin-top: 18px;
+}
+
+.match-modal button {
+  display: block;
+  width: 100%;
+}
+
+.match-modal .close-modal {
+  background: #f5edf0;
+  color: #555;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0 5%;
+  }
+
+  .profile-image-container {
+    height: 380px;
+  }
+
+  .discover-container,
+  .matches-container {
+    margin-top: 30px;
+  }
+}
