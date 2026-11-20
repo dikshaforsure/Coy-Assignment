@@ -4,6 +4,17 @@ import { MapPin, Sparkles } from 'lucide-react';
 
 const SWIPE_THRESHOLD = 105;
 
+const cardVariants = {
+  enter: { opacity: 0, scale: 0.96, y: 16 },
+  center: { opacity: 1, scale: 1, y: 0 },
+  exit: (direction) => ({
+    x: direction === 'like' ? 520 : -520,
+    opacity: 0,
+    rotate: direction === 'like' ? 18 : -18,
+    transition: { duration: 0.28, ease: 'easeOut' },
+  }),
+};
+
 function getInterests(value) {
   if (Array.isArray(value)) return value;
   if (typeof value !== 'string') return [];
@@ -54,14 +65,11 @@ export default function SwipeCard({ profile, onSwipe, exitDirection = 'like', di
       dragElastic={0.82}
       onDragEnd={handleDragEnd}
       whileTap={disabled ? undefined : { cursor: 'grabbing' }}
-      initial={{ opacity: 0, scale: 0.96, y: 16 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{
-        x: exitDirection === 'like' ? 520 : -520,
-        opacity: 0,
-        rotate: exitDirection === 'like' ? 18 : -18,
-        transition: { duration: 0.28, ease: 'easeOut' },
-      }}
+      variants={cardVariants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      custom={exitDirection}
       transition={{ type: 'spring', stiffness: 280, damping: 25 }}
       aria-label={`${profile.name}, age ${profile.age}`}
     >
