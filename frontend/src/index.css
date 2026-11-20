@@ -1,8 +1,4 @@
-@import "tailwindcss";
-
-body {
-  background-color: #09090b;
-  color: #fafafa;
-  user-select: none;
-  overflow-x: hidden;
-}
+:root { color-scheme: light; }
+html { min-width: 320px; min-height: 100%; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button { -webkit-tap-highlight-color: transparent; }

@@ -1,43 +1,26 @@
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
 
-const API_URL = 'http://localhost:5000';
-
-export const getFeed = async () => {
-  const response = await fetch(`${API_URL}/feed`);
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch profiles');
+async function request(path, options) {
+  let response;
+  try {
+    response = await fetch(`${API_URL}${path}`, options);
+  } catch {
+    throw new Error('Unable to reach the server. Check that the backend is running.');
   }
 
-  return response.json();
-};
-
-export const swipeProfile = async (profileId, direction) => {
-  const response = await fetch(`${API_URL}/swipe`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      profileId,
-      direction,
-    }),
-  });
-
-  const data = await response.json();
-
+  const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(data.error || 'Swipe failed');
+    throw new Error(data.error || 'The request could not be completed.');
   }
-
   return data;
-};
+}
 
-export const getMatches = async () => {
-  const response = await fetch(`${API_URL}/matches`);
+export const getFeed = () => request('/feed');
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch matches');
-  }
+export const swipeProfile = (profileId, direction) => request('/swipe', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ profileId, direction }),
+});
 
-  return response.json();
-};
+export const getMatches = () => request('/matches');
