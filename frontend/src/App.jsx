@@ -16,6 +16,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [matchesLoading, setMatchesLoading] = useState(false);
   const [swiping, setSwiping] = useState(false);
+  const [exitDirection, setExitDirection] = useState('like');
   const [error, setError] = useState('');
   const swipeLock = useRef(false);
 
@@ -58,13 +59,14 @@ function App() {
 
     try {
       const result = await swipeProfile(profile.id, direction);
+      setExitDirection(direction);
       setProfiles((current) => current.filter((item) => item.id !== profile.id));
 
-      const updatedMatches = await getMatches();
-      setMatches(updatedMatches);
-
-      if (result.isMatch) {
-        setActiveMatch(profile);
+      if (result.isMatch) setActiveMatch(profile);
+      try {
+        setMatches(await getMatches());
+      } catch (refreshError) {
+        setError(refreshError.message || 'Your swipe was saved, but matches could not refresh.');
       }
     } catch (requestError) {
       setError(requestError.message || 'Your swipe could not be saved. Please try again.');
@@ -186,6 +188,7 @@ function App() {
                         key={currentProfile.id}
                         profile={currentProfile}
                         onSwipe={handleSwipe}
+                        exitDirection={exitDirection}
                         disabled={swiping}
                       />
                     </AnimatePresence>
