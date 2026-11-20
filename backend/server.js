@@ -50,21 +50,21 @@ app.post('/swipe', (req, res, next) => {
       return res.status(400).json({ error: 'A valid profileId and direction (like or pass) are required.' });
     }
 
-    const saveSwipe = db.transaction(() => {
+    const saveSwipe = db.transaction((targetProfileId, swipeDirection) => {
       const profile = db.prepare(
         'SELECT id, liked_current_user FROM profiles WHERE id = ?'
-      ).get(profileId);
+      ).get(targetProfileId);
 
       if (!profile) return { notFound: true };
 
       const result = db.prepare(`
         INSERT OR IGNORE INTO swipes (profile_id, direction)
         VALUES (?, ?)
-      `).run(profileId, direction);
+      `).run(targetProfileId, swipeDirection);
 
       if (result.changes === 0) return { alreadySwiped: true };
 
-      const isMatch = direction === 'like' && profile.liked_current_user === 1;
+      const isMatch = swipeDirection === 'like' && profile.liked_current_user === 1;
       return { success: true, isMatch };
     });
 
