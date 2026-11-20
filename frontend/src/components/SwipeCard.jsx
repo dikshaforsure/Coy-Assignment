@@ -29,7 +29,7 @@ function ProfileImage({ profile }) {
   );
 }
 
-export default function SwipeCard({ profile, onSwipe, disabled = false }) {
+export default function SwipeCard({ profile, onSwipe, exitDirection = 'like', disabled = false }) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-260, 260], [-13, 13]);
   const likeOpacity = useTransform(x, [25, 115], [0, 1]);
@@ -57,9 +57,9 @@ export default function SwipeCard({ profile, onSwipe, disabled = false }) {
       initial={{ opacity: 0, scale: 0.96, y: 16 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{
-        x: x.get() >= 0 ? 520 : -520,
+        x: exitDirection === 'like' ? 520 : -520,
         opacity: 0,
-        rotate: x.get() >= 0 ? 18 : -18,
+        rotate: exitDirection === 'like' ? 18 : -18,
         transition: { duration: 0.28, ease: 'easeOut' },
       }}
       transition={{ type: 'spring', stiffness: 280, damping: 25 }}
