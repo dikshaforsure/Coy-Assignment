@@ -1,58 +1,49 @@
 import { motion } from 'framer-motion';
-import { Heart, MessageCircle, ArrowRight } from 'lucide-react';
+import { Heart, Users, X } from 'lucide-react';
 
 export default function MatchModal({ profile, onClose, onViewMatches }) {
   return (
     <motion.div
+      className="match-overlay"
+      role="presentation"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
     >
-      <motion.div
-        initial={{ scale: 0.85, y: 20 }}
-        animate={{ scale: 1, y: 0 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="max-w-sm w-full space-y-6"
+      <motion.section
+        className="match-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="match-title"
+        initial={{ opacity: 0, scale: 0.88, y: 22 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 22 }}
       >
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 mx-auto">
-          <Heart className="w-7 h-7 fill-amber-400" />
-        </div>
-
-        <div className="space-y-2">
-          <h2 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-amber-300 via-amber-400 to-orange-400 bg-clip-text text-transparent">
-            It’s a match!
-          </h2>
-          <p className="text-sm text-zinc-300">
-            You and <span className="font-semibold text-white">{profile.name}</span> liked each other.
-          </p>
-        </div>
-
-        <div className="relative w-32 h-32 mx-auto rounded-full p-1 bg-gradient-to-tr from-amber-500 to-rose-500 shadow-xl">
+        <button className="modal-close" type="button" onClick={onClose} aria-label="Close match dialog">
+          <X size={19} />
+        </button>
+        <div className="match-celebration"><Heart size={30} fill="currentColor" /></div>
+        <p className="eyebrow">A LOVELY LITTLE BEGINNING</p>
+        <h2 id="match-title">It’s a match!</h2>
+        <p className="match-subtitle">You and <strong>{profile.name}</strong> liked each other.</p>
+        <div className="match-avatar-wrap">
           <img
-            src={profile.photoUrl}
+            src={profile.photo_url}
             alt={profile.name}
-            className="w-full h-full object-cover rounded-full"
+            onError={(event) => {
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=f3dce4&color=573847`;
+            }}
           />
         </div>
-
-        <div className="space-y-3 pt-2">
-          <button
-            onClick={onViewMatches}
-            className="w-full py-3.5 px-5 rounded-full bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm flex items-center justify-center gap-2 transition cursor-pointer"
-          >
-            <MessageCircle className="w-4 h-4" />
-            View All Matches
-          </button>
-          <button
-            onClick={onClose}
-            className="w-full py-3 px-5 rounded-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 text-sm flex items-center justify-center gap-1.5 transition cursor-pointer"
-          >
-            Keep Discovering
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-      </motion.div>
+        <button className="primary-button modal-primary" type="button" onClick={onViewMatches}>
+          <Users size={17} /> See your matches
+        </button>
+        <button className="text-button" type="button" onClick={onClose}>Keep discovering</button>
+      </motion.section>
     </motion.div>
   );
 }
