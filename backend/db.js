@@ -1,40 +1,39 @@
-
 const Database = require('better-sqlite3');
 const path = require('path');
 
-// Create database file
-const db = new Database(path.join(__dirname, 'coy.db'));
+const databasePath = process.env.COY_DB_PATH || path.join(__dirname, 'coy.db');
+const db = new Database(databasePath);
 
 db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+db.pragma('busy_timeout = 5000');
 
-// Create profiles table
 db.exec(`
   CREATE TABLE IF NOT EXISTS profiles (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
-    age INTEGER NOT NULL,
+    age INTEGER NOT NULL CHECK (age >= 18),
     photo_url TEXT,
     bio TEXT,
     location TEXT,
     interests TEXT,
-    liked_current_user INTEGER DEFAULT 0
+    liked_current_user INTEGER NOT NULL DEFAULT 0 CHECK (liked_current_user IN (0, 1))
   );
 
   CREATE TABLE IF NOT EXISTS swipes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     profile_id INTEGER NOT NULL UNIQUE,
-    direction TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(profile_id) REFERENCES profiles(id)
+    direction TEXT NOT NULL CHECK (direction IN ('like', 'pass')),
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(profile_id) REFERENCES profiles(id) ON DELETE CASCADE
   );
+
+  CREATE INDEX IF NOT EXISTS idx_swipes_direction ON swipes(direction);
 `);
 
-// Seed profiles only when database is empty
-const count = db.prepare(
-  'SELECT COUNT(*) AS count FROM profiles'
-).get().count;
+const profileCount = db.prepare('SELECT COUNT(*) AS count FROM profiles').get().count;
 
-if (count === 0) {
+if (profileCount === 0) {
   const names = [
     'Aarav', 'Ananya', 'Rohan', 'Priya', 'Kabir',
     'Ishita', 'Aditya', 'Meera', 'Arjun', 'Sneha',
@@ -68,34 +67,32 @@ if (count === 0) {
     'Art, Nature, Travelling'
   ];
 
-  const insert = db.prepare(`
+  const insertProfile = db.prepare(`
     INSERT INTO profiles
-    (name, age, photo_url, bio, location, interests, liked_current_user)
+      (name, age, photo_url, bio, location, interests, liked_current_user)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
 
-  const seed = db.transaction(() => {
-    for (let idx = 0; idx < 30; idx++) {
-      const gender = idx % 2 === 0 ? 'men' : 'women';
-      const photoNumber = (idx % 50) + 1;
+  const seedProfiles = db.transaction(() => {
+    for (let index = 0; index < names.length; index += 1) {
+      const gender = index % 2 === 0 ? 'men' : 'women';
+      const photoNumber = (index % 50) + 1;
+      const photoUrl = `https://randomuser.me/api/portraits/${gender}/${photoNumber}.jpg`;
 
-      const photo_url =
-        `https://randomuser.me/api/portraits/${gender}/${photoNumber}.jpg`;
-
-      insert.run(
-        names[idx],
-        20 + (idx % 7),
-        photo_url,
-        bios[idx % bios.length],
-        locations[idx % locations.length],
-        interests[idx % interests.length],
-        idx % 5 < 2 ? 1 : 0
+      insertProfile.run(
+        names[index],
+        20 + (index % 7),
+        photoUrl,
+        bios[index % bios.length],
+        locations[index % locations.length],
+        interests[index % interests.length],
+        index % 5 < 2 ? 1 : 0
       );
     }
   });
 
-  seed();
-  console.log('30 profiles seeded successfully!');
+  seedProfiles();
+  console.log('Seeded 30 mock profiles.');
 }
 
 module.exports = db;
