@@ -102,7 +102,7 @@ test('feed, swipe validation, mutual matching, privacy, and persistence', async 
   assert.equal(updatedFeed.length, 28);
   assert.ok(!updatedFeed.some((profile) => [1, 3].includes(profile.id)));
 
-  // Simulate a process restart: persisted swipes and mutual matches must survive.
+  // Restart the HTTP listener: persisted swipes and mutual matches remain available.
   await stopServer(server);
   const restarted = await startServer();
   server = restarted.instance;
