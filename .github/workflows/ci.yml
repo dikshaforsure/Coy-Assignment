@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main, feature/discover-swipe-experience]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install backend dependencies
+        run: npm --prefix backend install
+      - name: Install frontend dependencies
+        run: npm --prefix frontend install
+      - name: Run backend API tests
+        run: npm --prefix backend test
+      - name: Lint frontend
+        run: npm --prefix frontend run lint
+      - name: Build frontend
+        run: npm --prefix frontend run build
