@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { Heart, House, Sparkles, Users } from 'lucide-react';
 import SwipeCard from './components/SwipeCard.jsx';
 import MatchModal from './components/MatchModal.jsx';
@@ -183,7 +183,7 @@ function App() {
                 <>
                   <div className="card-stage">
                     {profiles[1] && <div className="card-shadow card-shadow-back" />}
-                    <AnimatePresence mode="popLayout">
+                    <AnimatePresence custom={exitDirection} mode="popLayout">
                       <SwipeCard
                         key={currentProfile.id}
                         profile={currentProfile}
