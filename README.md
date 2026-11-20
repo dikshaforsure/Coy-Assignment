@@ -91,7 +91,7 @@ The seed data intentionally stores incoming likes only on the server. The `liked
 npm --prefix backend test
 ```
 
-The API integration test verifies the 30-profile seed, response privacy, invalid input, missing profiles, duplicate swipe prevention, mutual matching, feed exclusion, and persistence after a simulated backend restart.
+The API integration test verifies the 30-profile seed, response privacy, invalid input, missing profiles, duplicate swipe prevention, mutual matching, feed exclusion, and persistence after restarting the API listener.
 
 ## Data model
 
